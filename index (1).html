@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>KANA LAB — 일본어 문자 암기 트레이너</title>
+<style>
+:root { --bg:#f6f7fb; --paper:#fff; --ink:#24263b; --secondary:#727889; --muted:#9b9eab; --outline:#e9eaf0; --accent:#6658d8; --accent-dark:#5042bc; --accent-light:#f0eeff; --green:#289875; --green-light:#e7f8f1; --red:#df6b6d; --red-light:#fff0f0; --amber:#e8a65d; --shadow:0 10px 42px rgba(37,33,80,.055); font-synthesis:none; }
+* {box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Noto Sans KR','Noto Sans CJK KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:14px;line-height:1.55}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a29af0;outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}kbd{border:1px solid #d7d8e4;background:#fff;border-radius:5px;padding:2px 5px;box-shadow:0 1px 0 #c7c9d7;font:600 11px sans-serif} [hidden]{display:none!important}
+.app-shell{max-width:1720px;margin:0 auto;min-height:100vh}.topbar{height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 42px;border-bottom:1px solid #e8eaf1;background:rgba(255,255,255,.86)}.brand{display:flex;align-items:center;gap:13px}.brand-mark{position:relative;width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(150deg,#7768eb,#5949d0);color:white;font-size:26px;font-weight:700;box-shadow:0 6px 18px #6c5dde27}.brand-mark span{position:absolute;right:-5px;bottom:-5px;background:#f2cb8d;color:#674a26;border-radius:6px;line-height:19px;height:20px;width:20px;text-align:center;font-size:12px;border:2px solid white}.brand-title{font-size:20px;letter-spacing:1px;font-weight:850;line-height:1.1}.brand-title span{color:var(--accent)}.brand-subtitle{margin-top:5px;color:#9499a5;font-size:11px;letter-spacing:.15px}.header-tools{display:flex;gap:10px;align-items:center}.offline-badge{color:#699482;background:#eef8f1;border:1px solid #dceee3;border-radius:999px;font-size:11px;padding:8px 13px;margin-right:9px;font-weight:700}.online-dot,.live-dot{display:inline-block;background:#39b892;width:7px;height:7px;border-radius:50%;margin-right:6px}.ghost-btn,.icon-btn{border:1px solid #e7e7ef;background:white;color:#555a6c;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;transition:.2s}.ghost-btn:hover,.icon-btn:hover{border-color:#cfcaf2;color:var(--accent);background:#faf9ff}.icon-btn{font-size:19px;width:39px;height:39px;padding:0;display:grid;place-items:center}
+.body-grid{display:grid;grid-template-columns:440px minmax(0,1fr);align-items:start;gap:0}.sidebar{background:#fff;min-height:calc(100vh - 90px);border-right:1px solid #e9e9f1;padding:31px 27px 28px;overflow:visible}.eyebrow{font-size:10px;font-weight:850;letter-spacing:1.55px;color:#948ae3}.side-intro h2{font-size:21px;margin:7px 0 9px;letter-spacing:-.7px}.side-intro h2 span{display:inline-block;vertical-align:middle;background:#f0eefe;color:#776dd9;border-radius:25px;padding:5px 9px;font-size:10px;letter-spacing:0;margin-left:6px}.side-intro p{font-size:12px;color:#8a8e9d;line-height:1.7;margin:0}.side-controls{margin-top:26px}.section-label-row{display:flex;align-items:center;justify-content:space-between}.field-label{font-size:12px;font-weight:800;color:#5d6374}.muted-small{font-size:11px;color:#999eac}.quick-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.small-chip{border:1px solid #e5e5ef;border-radius:8px;background:#fafafe;padding:7px 9px;color:#6c7180;font-size:11px;font-weight:700}.small-chip:hover{background:#eeeaff;color:#6252cb;border-color:#d3cafa}.scope-line{display:flex;align-items:center;justify-content:space-between;margin-top:17px;gap:8px;color:#8a8f9d;font-size:11px;font-weight:650}.segmented{display:flex;gap:3px;align-items:center;background:#f2f3f8;padding:4px;border-radius:11px;width:max-content}.segmented button{padding:8px 14px;border:0;background:transparent;color:#9296a5;border-radius:8px;font-weight:800;font-size:12px;white-space:nowrap}.segmented button.active{background:white;box-shadow:0 1px 5px #23254a16;color:var(--accent)}.segmented.small button{font-size:10px;padding:6px 9px}.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:10px;color:#9397a4;padding:19px 0 14px;border-bottom:1px solid #f0f1f5}.legend span{display:flex;align-items:center;gap:4px}.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%}.legend-dot.mastered{background:#45b99d}.legend-dot.learning{background:#aca1ec}.legend-dot.weak{background:#f0a5a5}.legend-dot.fresh{background:#d9dce6}
+.kana-board{padding-top:18px}.script-board{margin-bottom:23px}.script-head{display:flex;align-items:center;justify-content:space-between;margin:5px 0 12px}.script-title{font-size:14px;font-weight:850}.script-title small{font-size:10px;color:#a6a8b5;font-weight:600;margin-left:5px}.script-actions{display:flex;gap:5px}.mini-link{border:none;background:none;color:#9486df;font-size:10px;font-weight:750;padding:4px}.mini-link:hover{text-decoration:underline}.category-heading{display:flex;align-items:center;gap:8px;margin:13px 0 8px}.category-heading span{font-size:10px;color:#989aa7;white-space:nowrap;font-weight:750}.category-heading:after{content:"";flex:1;height:1px;background:#f0f0f5}.category-heading button{border:0;background:#f3f2fe;color:#7769dc;border-radius:6px;padding:3px 7px;font-size:10px;font-weight:750}.kana-row{display:grid;grid-template-columns:20px repeat(5,minmax(0,1fr));gap:6px;align-items:stretch;margin:7px 0}.row-label{color:#a1a4b0;font-size:10px;display:grid;place-items:center;font-weight:750}.kana-tile{border:1px solid #e9ebf2;background:#fff;border-radius:9px;height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 0;position:relative;transition:background .12s,border-color .12s,box-shadow .12s;color:#303343;min-width:0}.kana-tile:hover{border-color:#b5adf1;transform:translateY(-1px)}.kana-tile.selected{background:#f7f5ff;border-color:#b9b0ef;box-shadow:inset 0 0 0 1px #d5ceff}.kana-tile.mastered{background:#f2fbf7;border-color:#bbe9d7}.kana-tile.mastered.selected{box-shadow:inset 0 0 0 1px #91d9b9}.kana-tile.weak{background:#fff8f7;border-color:#f4cccc}.kana-tile.weak.selected{box-shadow:inset 0 0 0 1px #f0b8b8}.kana-tile:not(.selected){opacity:.63}.kana-tile.not-picked{opacity:.54}.kana-tile .kana-sym{font-size:26px;font-weight:550;line-height:1.1;font-family:'Noto Sans JP','Noto Sans CJK JP','Yu Gothic','Meiryo',sans-serif}.kana-tile .kana-roman{font-size:9px;font-weight:700;color:#9b9eac;line-height:1.1}.kana-tile .kana-count{position:absolute;right:3px;bottom:2px;font-size:8px;color:#afb2bf;font-variant-numeric:tabular-nums}.kana-tile .selected-check{position:absolute;right:3px;top:2px;font-size:9px;color:#7464d6;line-height:1}.kana-tile.mastered .selected-check{color:#42ad89}.kana-tile.weak .selected-check{color:#db8b89}.kana-spacer{visibility:hidden}.inspector{background:#f8f8fd;border:1px solid #efedf9;border-radius:14px;padding:15px;margin-top:10px}.inspect-head{display:flex;gap:12px;align-items:center;margin-bottom:11px}.inspect-glyph{width:53px;height:54px;display:grid;place-items:center;font-size:33px;font-weight:600;border-radius:10px;background:white;border:1px solid #ebeaf2;font-family:'Noto Sans JP','Noto Sans CJK JP',sans-serif}.inspect-head strong{font-size:14px}.inspect-head p{margin:3px 0 0;color:#9296a3;font-size:11px}.inspect-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:13px}.inspect-stat{text-align:center;background:white;border:1px solid #ececf4;border-radius:9px;padding:8px 4px}.inspect-stat strong{display:block;font-size:17px}.inspect-stat small{display:block;font-size:10px;color:#9296a3}.inspect-actions{display:flex;gap:7px;margin-top:12px}.inspect-actions button{flex:1;border:1px solid #e6e1f6;background:#fff;border-radius:8px;padding:8px 3px;font-size:10px;font-weight:800;color:#675aca}.inspect-actions button:hover{background:#eeeaff}.side-footnote{margin-top:16px;font-size:10px;color:#aaaeba;line-height:1.6}
+.main-area{padding:40px 47px 28px;min-width:0}.workspace-top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 0 26px}.workspace-top h1{font-size:28px;letter-spacing:-1.4px;line-height:1.25;margin:8px 0}.spark{color:#ddae6f;font-size:20px;margin-left:8px}.workspace-top p{font-size:12px;color:#999dad;margin:0}.progress-mini{min-width:165px;background:white;border:1px solid #ececf4;padding:15px 17px;border-radius:13px}.progress-caption{font-size:10px;color:#9b9fac;font-weight:700}.progress-count{font-size:23px;line-height:1.6;font-weight:850;letter-spacing:-.8px}.progress-count span{color:#a6aab5;font-size:13px;font-weight:600}.progress-track{height:6px;background:#eff0f6;border-radius:10px;overflow:hidden}.progress-track div{height:100%;background:#7566db;width:0%;border-radius:10px;transition:width .2s}.tabs{display:flex;gap:11px;margin-bottom:18px}.tab{width:50%;display:flex;align-items:center;gap:12px;text-align:left;background:white;border:1px solid #e9eaf2;border-radius:13px;padding:16px 20px;color:#858a9a;font-weight:850;font-size:15px;box-shadow:0 3px 12px #35346905}.tab.active{color:#594bc5;border-color:#c9c4f0;background:#fdfcff;box-shadow:0 0 0 1px #e6e2ff}.tab-icon{display:inline-grid;place-items:center;width:33px;height:33px;border-radius:10px;background:#f2f3f7;font-size:20px;color:#a7a9b9;font-weight:650}.tab.active .tab-icon{background:#eeeaff;color:#6655cd}.tab-description{font-size:10px;font-weight:600;color:#a9aaba;margin-left:auto}.quiz-options{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:18px}.control-group{display:flex;align-items:center;gap:12px}.option-toggles{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.toggle-line{cursor:pointer;display:flex;align-items:center;gap:7px;color:#777d8c;font-size:11px;white-space:nowrap;font-weight:700}.toggle-line input{position:absolute;opacity:0;width:1px;height:1px}.toggle-line .switch{position:relative;width:30px;height:17px;background:#dddfe9;border-radius:30px;transition:.15s}.toggle-line .switch:after{content:"";position:absolute;top:3px;left:3px;width:11px;height:11px;background:white;border-radius:50%;transition:.15s;box-shadow:0 1px 2px #0002}.toggle-line input:checked+.switch{background:#7768de}.toggle-line input:checked+.switch:after{transform:translateX(13px)}.toggle-line input:focus-visible+.switch{outline:3px solid #a29af0;outline-offset:2px}select{color:#6057ab;background:#fff;border:1px solid #deddf1;padding:9px 11px;border-radius:9px;font-weight:700;font-size:12px;max-width:180px}
+.quiz-card{border-radius:20px;background:white;border:1px solid #e8e8f0;box-shadow:var(--shadow);overflow:hidden}.quiz-head{padding:22px 27px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f2f2f7;color:#858997;font-size:12px}.quiz-status{display:flex;align-items:center;gap:6px;font-weight:750}.quiz-status .live-dot{margin:0 2px 0 0}.quiz-subdot{color:#ceced6}.question-number{letter-spacing:1.2px;font-weight:900;font-size:10px;color:#b3b4bf}.question-main{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:315px;padding:34px 20px 14px}.question-prompt{font-size:13px;color:#a2a3ae;margin:0}.question-glyph{font-family:'Noto Sans JP','Noto Sans CJK JP','Yu Gothic','Meiryo',sans-serif;font-size:clamp(92px,12vw,154px);font-weight:520;letter-spacing:1px;line-height:1.35;color:#292b43;text-align:center;max-width:100%;overflow-wrap:anywhere;margin:20px 0 10px}.question-glyph.word{font-size:clamp(43px,6.9vw,90px);line-height:1.4;letter-spacing:2px}.question-glyph.word.long{font-size:clamp(36px,5vw,63px)}.question-chips{display:flex;align-items:center;gap:7px}.type-chip,.hint-chip{padding:6px 11px;background:#f1efff;color:#7265ce;font-size:11px;font-weight:800;border-radius:100px}.hint-chip{background:#f6f7fa;color:#999dab}.answer-label{font-size:11px;letter-spacing:1px;font-weight:900;color:#555878;display:block;margin-bottom:11px}.answer-label span{color:#a8a9b5;font-weight:600;letter-spacing:0}.quiz-card form{margin:0 auto;padding:17px 28px 21px;max-width:655px}.answer-control{display:flex;gap:10px}.answer-control input{border:2px solid #eaeaf1;background:#fefeff;border-radius:12px;min-height:58px;padding:10px 18px;font-size:23px;font-weight:750;color:#34344c;letter-spacing:1px;width:100%;min-width:0;outline:none;transition:.15s}.answer-control input:focus{border-color:#aea3f2;box-shadow:0 0 0 3px #eae6ff66}.answer-control input::placeholder{color:#c2c3d0;font-size:16px;font-weight:500;letter-spacing:0}.answer-control button,.btn-primary{background:#6759db;color:#fff;border:none;border-radius:12px;padding:0 23px;min-height:56px;white-space:nowrap;font-weight:850;transition:background .15s,transform .15s}.answer-control button:hover,.btn-primary:hover{background:#5749bf}.answer-control button span{margin-left:6px;opacity:.75}.answer-instruction{margin:11px 0 0;color:#afb1bd;font-size:11px}.feedback{max-width:599px;margin:0 auto 23px;padding:15px 18px;border-radius:12px;font-size:13px}.feedback.right{background:#eff9f4;color:#247f62;border:1px solid #d5efe3}.feedback.wrong{background:#fff3f2;color:#a85c59;border:1px solid #f7dbda}.feedback-top{font-weight:850;display:flex;align-items:center;gap:7px}.feedback-detail{color:#565d6b;font-size:12px;margin-top:5px}.feedback-detail b{font-size:15px;color:#313647}.feedback small{display:block;margin-top:4px;color:#777e89}.quiz-bottom{padding:16px 26px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #f1f1f6}.session-stats{display:flex;align-items:center;gap:17px;flex-wrap:wrap}.session-stat{display:flex;align-items:center;gap:5px;color:#9195a1;font-size:11px}.session-stat i{width:7px;height:7px;border-radius:50%;display:inline-block;background:#adb1ba}.session-stat.good i{background:#54bba0}.session-stat.bad i{background:#ed9291}.session-stat strong{font-size:13px;color:#424759}.session-stat.dim{border-left:1px solid #eeeeF5;padding-left:13px}.secondary-actions{display:flex;gap:10px;align-items:center}.text-btn{border:0;background:transparent;color:#9287d4;padding:7px;font-size:11px;font-weight:800}.text-btn:hover{color:#574abe}.empty-view{text-align:center;padding:75px 30px 78px}.empty-icon{font-size:40px;color:#8273df}.empty-view h3{font-size:24px;margin:9px 0}.empty-view p{font-size:12px;color:#9094a4;max-width:320px;margin:0 auto 24px}.empty-view .btn-primary{padding:13px 24px;min-height:auto}
+.below-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}.metric-card{background:white;border:1px solid #ededf4;border-radius:14px;padding:20px;display:flex;align-items:center;gap:14px}.metric-icon{width:41px;height:41px;border-radius:12px;display:grid;place-items:center;font-size:21px;font-weight:700}.metric-icon.lavender{background:#f2eeff;color:#8271da}.metric-icon.mint{background:#e6f8ef;color:#45a885}.metric-icon.peach{background:#fff3ea;color:#eaa66f}.metric-card div:nth-child(2){display:flex;flex-direction:column}.metric-card span{color:#a1a4b1;font-size:11px;font-weight:700}.metric-card strong{color:#383b51;font-size:21px;font-weight:850;line-height:1.4}.metric-card strong span{font-size:11px;margin-left:3px}.foot-panels{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:24px}.info-panel{padding:20px;background:#fdfdff;border:1px solid #ebeaf3;border-radius:14px}.panel-title{font-weight:850;font-size:13px}.panel-title span{color:#b2a3eb;margin-left:5px}.info-panel p{color:#9395a5;font-size:11px;line-height:1.9;margin:9px 0 0}.info-panel p b{color:#7b739c}.page-footer{color:#aaadba;font-size:10px;text-align:center;padding:28px 0 2px}.page-footer b{color:#8980b9}.toast{position:fixed;z-index:30;right:24px;bottom:25px;background:#35334f;color:white;padding:13px 19px;border-radius:12px;font-size:12px;box-shadow:0 10px 25px #20203033;max-width:min(450px,calc(100vw - 25px));opacity:0;transform:translateY(15px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateY(0)}
+@media (min-width:1450px){.body-grid{grid-template-columns:478px minmax(0,1fr)}.sidebar{padding:36px 35px}.main-area{padding:48px 68px 28px}.kana-tile{height:70px}}@media (max-width:1230px){.body-grid{grid-template-columns:365px minmax(0,1fr)}.sidebar{padding:25px 19px}.main-area{padding:35px 25px}.tab-description{display:none}.quiz-options{justify-content:flex-start}.option-toggles{width:100%}}@media (max-width:880px){.body-grid{display:flex;flex-direction:column}.main-area{order:1;width:100%;padding:26px 20px 22px}.sidebar{order:2;width:100%;min-height:auto;border-right:0;border-top:1px solid #e9e9f1;padding:28px 22px}.topbar{height:75px;padding:0 22px}.offline-badge{display:none}.header-tools{gap:5px}.header-tools .ghost-btn span{display:none}.ghost-btn{font-size:20px;padding:6px 12px}.kana-board{display:grid;grid-template-columns:1fr 1fr;gap:24px}.inspector{max-width:550px}.kana-tile{height:64px}}@media (max-width:590px){.brand-mark{width:42px;height:42px;font-size:23px}.brand-title{font-size:17px}.brand-subtitle{font-size:10px}.topbar{padding:0 15px}.main-area{padding:25px 14px}.workspace-top{gap:9px;align-items:flex-start}.workspace-top h1{font-size:22px;letter-spacing:-.6px}.workspace-top p{max-width:230px;line-height:1.6}.progress-mini{min-width:98px;padding:11px 9px}.progress-count{font-size:17px}.tabs{gap:7px}.tab{padding:11px 10px;font-size:12px;gap:6px}.tab-icon{width:28px;height:28px;font-size:16px}.quiz-options{gap:10px}.segmented button{padding:7px 10px;font-size:11px}.control-group{gap:8px}.quiz-head{padding:15px}.question-main{min-height:247px;padding:27px 10px 8px}.question-glyph{font-size:105px}.question-glyph.word{font-size:clamp(44px,9vw,70px)}.question-glyph.word.long{font-size:38px}.quiz-card form{padding:16px 15px}.answer-control input{font-size:19px;padding:9px 12px;min-height:53px}.answer-control input::placeholder{font-size:12px}.answer-control button{min-height:53px;font-size:11px;padding:0 13px}.answer-control button span{display:none}.quiz-bottom{padding:14px 12px;flex-direction:column;align-items:stretch;gap:7px}.secondary-actions{justify-content:flex-end}.below-grid{gap:7px}.metric-card{padding:11px 8px;gap:7px;flex-direction:column;align-items:flex-start}.metric-icon{height:27px;width:27px;border-radius:8px;font-size:14px}.metric-card span{font-size:9px}.metric-card strong{font-size:17px}.foot-panels{grid-template-columns:1fr}.kana-board{display:block}.sidebar{padding:25px 16px}.kana-tile{height:66px}.kana-row{gap:7px}.side-intro h2{font-size:19px}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+
+@media (min-width:881px){.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#dddcea transparent}}
+.kana-board.hide-romaji .kana-tile .kana-roman{visibility:hidden}
+.reading-toggle{border:0;background:#f2f1fd;color:#796bdd;font-size:10px;font-weight:800;border-radius:6px;padding:3px 8px;margin-left:auto}
+.reading-toggle:hover{background:#e4e0fa}
+.row-label{border:0;background:transparent;cursor:pointer;padding:0}
+.row-label:hover{color:var(--accent)}
+
+</style>
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">あ<span>ア</span></div>
+    <div><div class="brand-title">KANA <span>LAB</span></div><div class="brand-subtitle">나만의 일본어 암기실</div></div>
+  </div>
+  <div class="header-tools">
+    <span class="offline-badge"><span class="online-dot"></span> 오프라인 학습</span>
+    <button type="button" class="ghost-btn" id="export-btn" title="학습 기록 JSON 파일로 백업">↧ <span>기록 백업</span></button>
+    <button type="button" class="ghost-btn" id="import-btn" title="백업한 기록 불러오기">↥ <span>복원</span></button>
+    <input type="file" id="import-file" accept=".json,application/json" hidden />
+    <button type="button" class="icon-btn" id="reset-btn" title="모든 학습 기록 초기화" aria-label="초기화">↺</button>
+  </div>
+</header>
+<div class="body-grid">
+  <aside class="sidebar">
+    <div class="side-intro"><div class="eyebrow">MY STUDY BOARD</div><h2>나의 문자표 <span id="selected-badge">0개 선택</span></h2><p>글자를 클릭하면 출제 범위에 넣거나 뺄 수 있어. 정답·오답 기록도 함께 표시돼.</p></div>
+    <div class="side-controls">
+      <div class="section-label-row"><span class="field-label">빠른 범위 선택</span><span id="pool-hint" class="muted-small"></span></div>
+      <div class="quick-row">
+        <button id="quick-basic" class="small-chip">기본 46자</button>
+        <button id="quick-all" class="small-chip">전체 선택</button>
+        <button id="quick-weak" class="small-chip">취약만</button>
+        <button id="quick-clear" class="small-chip">모두 해제</button>
+      </div>
+      <div class="scope-line"><span>표시할 문자표</span><div class="segmented small" id="board-script" role="group" aria-label="문자표 표시"><button data-board="both" class="active">모두</button><button data-board="h" >히라가나</button><button data-board="k">가타카나</button></div></div>
+      <div class="legend"><span><i class="legend-dot mastered"></i> 숙달</span><span><i class="legend-dot learning"></i> 학습 중</span><span><i class="legend-dot weak"></i> 취약</span><span><i class="legend-dot fresh"></i> 미학습</span><button type="button" class="reading-toggle" id="reading-toggle" aria-pressed="false">◉ 발음 표시</button></div>
+    </div>
+    <div id="kana-board" class="kana-board"></div>
+    <section id="inspector" class="inspector" aria-live="polite"></section>
+    <div class="side-footnote">✓ = 출제 선택 · 작은 숫자 = 정답 / 오답. <strong>숙달</strong>은 5회 연속 정답·누적 정답률 80% 이상이 기준이야.</div>
+  </aside>
+  <main class="main-area">
+    <div class="workspace-top">
+      <div><div class="eyebrow">PRACTICE SPACE</div><h1>조금씩, 확실하게 외우기<span class="spark">✳</span></h1><p>생각나는 발음을 한글로 입력해 봐. <kbd>Enter</kbd>만 눌러도 계속 학습할 수 있어.</p></div>
+      <div class="progress-mini" title="선택한 글자 중 숙달한 수"><div class="progress-caption">글자 숙달 현황</div><div class="progress-count" id="progress-count">0 <span>/ 0</span></div><div class="progress-track"><div id="progress-bar"></div></div></div>
+    </div>
+    <div class="tabs" role="tablist" aria-label="학습 방식"><button id="tab-kana" role="tab" aria-selected="true" class="tab active"><span class="tab-icon">あ</span> 글자별 암기<span class="tab-description">한 글자씩</span></button><button id="tab-word" role="tab" aria-selected="false" class="tab"><span class="tab-icon">単</span> 단어별 암기<span class="tab-description">수능 일본어Ⅰ 대비</span></button></div>
+    <div class="quiz-options">
+      <div class="control-group"><span class="field-label">출제 문자</span><div class="segmented" id="study-script" role="group" aria-label="출제할 문자"><button data-script="h">히라가나</button><button data-script="k">가타카나</button><button data-script="both" class="active">혼합</button></div></div>
+      <div class="control-group" id="word-filter-wrapper" hidden><span class="field-label">단어 범위</span><select id="word-filter" aria-label="단어 학습 범위"><option value="all">전체 단어</option><option value="basic">기초·인사</option><option value="school">학교·취미</option><option value="living">생활·음식</option><option value="travel">장소·이동</option><option value="culture">문화·표현</option><option value="wrong">오답 단어만</option></select></div>
+      <div class="option-toggles"><label class="toggle-line"><input type="checkbox" id="mastered-exclude" checked /><span class="switch"></span><span>숙달 자동 제외</span></label><label class="toggle-line"><input type="checkbox" id="weak-priority" checked /><span class="switch"></span><span>오답 우선</span></label></div>
+    </div>
+    <section class="quiz-card" aria-label="암기 퀴즈">
+      <div class="quiz-head"><div class="quiz-status"><span class="live-dot"></span><span id="quiz-kind">글자별 학습</span><span class="quiz-subdot">·</span><span id="quiz-pool">문제 준비 중</span></div><div class="question-number" id="question-number">QUESTION 001</div></div>
+      <div id="question-view">
+        <div class="question-main"><p class="question-prompt">다음 일본어의 발음을 입력하세요</p><div class="question-glyph" id="question-glyph" lang="ja">あ</div><div class="question-chips"><span class="type-chip" id="type-chip">히라가나</span><span class="hint-chip" id="hint-chip">한글 입력</span></div></div>
+        <form id="answer-form" autocomplete="off" novalidate><label for="answer-input" class="answer-label">YOUR ANSWER <span>· 한글로 입력</span></label><div class="answer-control"><input id="answer-input" type="text" placeholder="예: 시, 쓰, 쿄우" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" lang="ko" aria-describedby="answer-instruction" /><button type="submit" id="submit-btn">정답 확인 <span>↵</span></button></div><p class="answer-instruction" id="answer-instruction">한글로 발음을 쓴 뒤 Enter를 누르면 채점돼. (예: シ → 시)</p></form>
+        <div id="feedback" class="feedback" hidden aria-live="polite"></div>
+      </div>
+      <div id="empty-view" class="empty-view" hidden><div class="empty-icon">✦</div><h3 id="empty-title">출제할 글자가 없어!</h3><p id="empty-message">왼쪽 문자표에서 학습할 글자를 선택해 줘.</p><button class="btn-primary" id="empty-reset">전체 기본 글자 선택</button></div>
+      <div class="quiz-bottom"><div class="session-stats"><span class="session-stat good"><i></i> 정답 <strong id="session-correct">0</strong></span><span class="session-stat bad"><i></i> 오답 <strong id="session-wrong">0</strong></span><span class="session-stat dim">정답률 <strong id="session-rate">—</strong></span></div><div class="secondary-actions"><button id="skip-btn" class="text-btn" title="채점하지 않고 다음 문제">건너뛰기 →</button><button id="undo-btn" class="text-btn" hidden>↶ 방금 채점 취소</button></div></div>
+    </section>
+    <div class="below-grid"><section class="metric-card"><div class="metric-icon lavender">◫</div><div><span>전체 누적 풀이</span><strong id="all-attempts">0<span>문제</span></strong></div></section><section class="metric-card"><div class="metric-icon mint">✓</div><div><span>전체 정답률</span><strong id="all-accuracy">—</strong></div></section><section class="metric-card"><div class="metric-icon peach">↻</div><div><span>복습이 필요한 항목</span><strong id="weak-total">0<span>개</span></strong></div></section></div>
+    <div class="foot-panels"><section class="info-panel"><div class="panel-title">이렇게 사용하면 좋아 <span>✦</span></div><p>왼쪽 문자표에서 외울 글자를 체크해. 정답을 누적하면 글자별 기록이 자동 저장되고, <b>숙달된 글자</b>는 자동으로 출제에서 빠져. 헷갈리는 글자만 골라서 계속 풀어도 돼.</p></section><section class="info-panel" id="vocab-panel"><div class="panel-title">수능 일본어Ⅰ 어휘 노트 <span>✎</span></div><p id="vocab-summary">수능 학습에 도움이 되는 기본 단어를 주제별로 선별했어. <b>기출 출현 횟수나 빈출 순위를 검증한 목록은 아니야.</b> 정답 확인 뒤 뜻도 보여줘.</p></section></div>
+    <footer class="page-footer">KANA LAB · 개인용 오프라인 학습 도구 · 기록은 이 브라우저에 저장돼. 중요한 기록은 <b>백업</b>을 이용해 줘.</footer>
+  </main>
+</div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+// 수능 일본어Ⅰ 학습을 위한 선별 기초 어휘. 실제 기출 출현 빈도 순위가 아님.
+const WORD_DATA = {
+  basic: `
+あいさつ|인사
+あさ|아침
+ひる|낮
+よる|밤
+きょう|오늘
+きのう|어제
+あした|내일
+おととい|그저께
+あさって|모레
+いま|지금
+まいにち|매일
+まいあさ|매일 아침
+まいばん|매일 밤
+こんしゅう|이번 주
+らいしゅう|다음 주
+せんしゅう|지난주
+ことし|올해
+らいねん|내년
+きょねん|작년
+はる|봄
+なつ|여름
+あき|가을
+ふゆ|겨울
+てんき|날씨
+あめ|비
+ゆき|눈
+かぜ|바람
+くもり|흐림
+はれ|맑음
+あつい|덥다
+さむい|춥다
+あたたかい|따뜻하다
+すずしい|선선하다
+おおきい|크다
+ちいさい|작다
+あたらしい|새롭다
+ふるい|오래되다
+たかい|높다, 비싸다
+やすい|싸다
+おもしろい|재미있다
+むずかしい|어렵다
+やさしい|쉽다, 친절하다
+おいしい|맛있다
+かわいい|귀엽다
+たのしい|즐겁다
+いそがしい|바쁘다
+すき|좋아함
+きらい|싫어함
+じょうず|잘함
+へた|서툼
+だいじょうぶ|괜찮음
+ありがとう|고마워
+すみません|실례합니다, 죄송합니다
+おはよう|좋은 아침
+こんにちは|안녕하세요
+こんばんは|안녕하세요(저녁)
+おやすみ|잘 자
+さようなら|안녕히 가세요
+いただきます|잘 먹겠습니다
+ごちそうさま|잘 먹었습니다
+はい|네
+いいえ|아니요
+どうぞ|부디, 자
+どうも|정말, 매우
+もしもし|여보세요(전화)
+`,
+  school: `
+がっこう|학교
+こうこう|고등학교
+だいがく|대학교
+きょうしつ|교실
+としょかん|도서관
+せんせい|선생님
+がくせい|학생
+せいと|학생
+ともだち|친구
+せんぱい|선배
+こうはい|후배
+りゅうがくせい|유학생
+べんきょう|공부
+しゅくだい|숙제
+しけん|시험
+じゅぎょう|수업
+きょうかしょ|교과서
+じしょ|사전
+ほん|책
+ざっし|잡지
+しんぶん|신문
+てがみ|편지
+えんぴつ|연필
+けしゴム|지우개
+ノート|공책
+ペン|펜
+かみ|종이
+つくえ|책상
+いす|의자
+まど|창문
+ドア|문
+かばん|가방
+じかん|시간
+じかんわり|시간표
+やすみ|휴식, 휴일
+なまえ|이름
+ことば|말, 언어
+にほんご|일본어
+かんこくご|한국어
+えいご|영어
+おんがく|음악
+えいが|영화
+しゃしん|사진
+うた|노래
+りょこう|여행
+しゅみ|취미
+スポーツ|스포츠
+サッカー|축구
+テニス|테니스
+バスケットボール|농구
+やきゅう|야구
+ピアノ|피아노
+ギター|기타
+パソコン|컴퓨터
+スマホ|스마트폰
+メール|메일
+インターネット|인터넷
+ゲーム|게임
+アニメ|애니메이션
+マンガ|만화
+ともだち|친구
+はなす|말하다
+きく|듣다, 묻다
+よむ|읽다
+かく|쓰다
+みる|보다
+おしえる|가르치다
+ならう|배우다
+わかる|알다, 이해하다
+`,
+  living: `
+かぞく|가족
+ちち|아버지(나의)
+はは|어머니(나의)
+あに|형, 오빠(나의)
+あね|누나, 언니(나의)
+おとうと|남동생
+いもうと|여동생
+おとうさん|아버지
+おかあさん|어머니
+おにいさん|형, 오빠
+おねえさん|누나, 언니
+ひと|사람
+こども|아이
+おとな|어른
+おとこ|남자
+おんな|여자
+いえ|집
+へや|방
+だいどころ|부엌
+トイレ|화장실
+おふろ|목욕, 욕조
+テレビ|텔레비전
+れいぞうこ|냉장고
+でんわ|전화
+とけい|시계
+かさ|우산
+くつ|신발
+ふく|옷
+シャツ|셔츠
+ズボン|바지
+スカート|치마
+ぼうし|모자
+めがね|안경
+おかね|돈
+さいふ|지갑
+かいもの|쇼핑
+たべもの|음식
+のみもの|음료
+ごはん|밥, 식사
+あさごはん|아침밥
+ひるごはん|점심밥
+ばんごはん|저녁밥
+みず|물
+おちゃ|차
+ぎゅうにゅう|우유
+コーヒー|커피
+ジュース|주스
+パン|빵
+たまご|달걀
+にく|고기
+さかな|생선
+やさい|채소
+くだもの|과일
+りんご|사과
+みかん|귤
+いちご|딸기
+バナナ|바나나
+ラーメン|라멘
+すし|초밥
+カレー|카레
+おべんとう|도시락
+おかし|과자
+ケーキ|케이크
+チョコレート|초콜릿
+アイスクリーム|아이스크림
+たべる|먹다
+のむ|마시다
+つくる|만들다
+かう|사다
+うる|팔다
+ねる|자다
+おきる|일어나다
+あらう|씻다
+`,
+  travel: `
+えき|역
+でんしゃ|전철
+ちかてつ|지하철
+しんかんせん|신칸센
+バス|버스
+タクシー|택시
+じてんしゃ|자전거
+くるま|자동차
+ひこうき|비행기
+ふね|배
+きっぷ|표
+チケット|티켓
+きっさてん|찻집, 카페
+カフェ|카페
+レストラン|레스토랑
+デパート|백화점
+スーパー|슈퍼마켓
+コンビニ|편의점
+みせ|가게
+ほんや|서점
+びょういん|병원
+ぎんこう|은행
+ゆうびんきょく|우체국
+こうえん|공원
+どうぶつえん|동물원
+はくぶつかん|박물관
+えいがかん|영화관
+ホテル|호텔
+りょかん|일본식 여관
+くうこう|공항
+まち|마을, 거리
+みち|길
+はし|다리
+うみ|바다
+やま|산
+かわ|강
+そら|하늘
+にほん|일본
+とうきょう|도쿄
+きょうと|교토
+おおさか|오사카
+かんこく|한국
+ちず|지도
+ばしょ|장소
+ここ|여기
+そこ|거기
+あそこ|저기
+みぎ|오른쪽
+ひだり|왼쪽
+まえ|앞
+うしろ|뒤
+うえ|위
+した|아래
+なか|안
+そと|밖
+となり|옆
+ちかく|근처
+とおい|멀다
+ちかい|가깝다
+あるく|걷다
+はしる|달리다
+いく|가다
+くる|오다
+かえる|돌아가다
+のる|타다
+おりる|내리다
+まつ|기다리다
+あう|만나다
+`,
+  culture: `
+まつり|축제
+はなび|불꽃놀이
+はなみ|꽃구경
+さくら|벚꽃
+おしょうがつ|설날, 새해
+おぼん|오봉(명절)
+たなばた|칠석
+ゆかた|유카타
+きもの|기모노
+じんじゃ|신사
+おてら|절
+おみやげ|기념품, 선물
+おまつり|축제
+おんせん|온천
+すもう|스모
+じゅうどう|유도
+けんどう|검도
+しょどう|서예
+おりがみ|종이접기
+アニメーション|애니메이션
+おにぎり|주먹밥
+みそしる|된장국
+てんぷら|튀김
+うどん|우동
+そば|메밀국수
+おこのみやき|오코노미야키
+たこやき|타코야키
+まんが|만화
+おもてなし|환대, 접대
+プレゼント|선물
+パーティー|파티
+クリスマス|크리스마스
+バレンタイン|밸런타인
+ハロウィン|핼러윈
+あけまして|새해가 밝아
+おめでとう|축하해
+よろしく|잘 부탁해
+おねがい|부탁
+どういたしまして|천만에요
+しつれい|실례
+ひさしぶり|오랜만
+げんき|건강함, 기운
+びょうき|병, 아픔
+くすり|약
+きもち|기분
+こころ|마음
+ゆめ|꿈
+しごと|일
+アルバイト|아르바이트
+やくそく|약속
+よてい|예정
+たんじょうび|생일
+おいわい|축하
+しんせつ|친절함
+たいせつ|소중함
+すばらしい|훌륭하다
+`,
+};
+
+// Japanese kana -> learner-friendly Hangul phonetic answer variants.
+// Korean transcriptions are approximations; accept common long-vowel and sokuon variants.
+const KOREAN_SYLLABLES = {
+  'あ':'아','い':'이','う':'우','え':'에','お':'오',
+  'か':'카','き':'키','く':'쿠','け':'케','こ':'코',
+  'さ':'사','し':'시','す':'스','せ':'세','そ':'소',
+  'た':'타','ち':'치','つ':'쓰','て':'테','と':'토',
+  'な':'나','に':'니','ぬ':'누','ね':'네','の':'노',
+  'は':'하','ひ':'히','ふ':'후','へ':'헤','ほ':'호',
+  'ま':'마','み':'미','む':'무','め':'메','も':'모',
+  'や':'야','ゆ':'유','よ':'요',
+  'ら':'라','り':'리','る':'루','れ':'레','ろ':'로',
+  'わ':'와','を':'오','ん':'응',
+  'が':'가','ぎ':'기','ぐ':'구','げ':'게','ご':'고',
+  'ざ':'자','じ':'지','ず':'즈','ぜ':'제','ぞ':'조',
+  'だ':'다','ぢ':'지','づ':'즈','で':'데','ど':'도',
+  'ば':'바','び':'비','ぶ':'부','べ':'베','ぼ':'보',
+  'ぱ':'파','ぴ':'피','ぷ':'푸','ぺ':'페','ぽ':'포',
+  'きゃ':'캬','きゅ':'큐','きょ':'쿄',
+  'しゃ':'샤','しゅ':'슈','しょ':'쇼',
+  'ちゃ':'차','ちゅ':'추','ちょ':'초',
+  'にゃ':'냐','にゅ':'뉴','にょ':'뇨',
+  'ひゃ':'햐','ひゅ':'휴','ひょ':'효',
+  'みゃ':'먀','みゅ':'뮤','みょ':'묘',
+  'りゃ':'랴','りゅ':'류','りょ':'료',
+  'ぎゃ':'갸','ぎゅ':'규','ぎょ':'교',
+  'じゃ':'자','じゅ':'주','じょ':'조',
+  'びゃ':'뱌','びゅ':'뷰','びょ':'뵤',
+  'ぴゃ':'퍄','ぴゅ':'퓨','ぴょ':'표',
+  // Extra loan-word combinations included in the vocabulary list.
+  'ふぁ':'파','ふぃ':'피','ふぇ':'페','ふぉ':'포',
+  'てぃ':'티','でぃ':'디','とぅ':'투','どぅ':'두',
+  'うぃ':'위','うぇ':'웨','うぉ':'워',
+  'しぇ':'셰','ちぇ':'체','じぇ':'제',
+  'つぁ':'차','つぃ':'치','つぇ':'체','つぉ':'초'
+};
+const KOREAN_EXTRAS = {
+  'つ':['츠'], 'を':['워'], 'ん':['은','음','ㄴ'],
+  'ふ':['푸'], 'じ':['쥐'], 'ぢ':['디'], 'づ':['두'],
+  'ち':['찌'], 'じゃ':['쟈'], 'じゅ':['쥬'], 'じょ':['죠']
+};
+const KOREAN_SPECIAL_WORDS = {'こんにちは':'곤니치와','こんばんは':'곤반와'};
+const KOREAN_SPECIAL_VARIANTS = {
+ 'こんにちは':['곤니치와','콘니치와','곤니찌와','콘니찌와'],
+ 'こんばんは':['곤반와','콘반와']
+};
+const toHira = s => [...s].map(c => {
+  const n=c.charCodeAt(0);return n>=0x30a1&&n<=0x30f6?String.fromCharCode(n-96):c;
+}).join('');
+const KOREAN_COMBINED_VOWEL = {'ㅏ':'아','ㅐ':'애','ㅑ':'아','ㅓ':'어','ㅔ':'에','ㅕ':'어','ㅗ':'오','ㅘ':'아','ㅚ':'에','ㅛ':'오','ㅜ':'우','ㅝ':'어','ㅞ':'에','ㅟ':'이','ㅠ':'우','ㅡ':'으','ㅢ':'이','ㅣ':'이'};
+// Adds a Hangul coda, e.g. 센 + 세 -> 센세, 키 + っ + 테 -> 킷테.
+function withCoda(prev, jong){
+  if(!prev)return prev;
+  const n=prev.charCodeAt(prev.length-1);
+  if(n<0xac00||n>0xd7a3||((n-0xac00)%28)!==0)return prev;
+  return prev.slice(0,-1)+String.fromCharCode(n+jong);
+}
+function doubleInitial(s){
+  const n=s.charCodeAt(0);if(n<0xac00||n>0xd7a3)return null;
+  const base=n-0xac00, cho=Math.floor(base/588), rest=base%588;
+  const doubled={0:1,3:4,7:8,9:10,12:13,14:13,15:1,16:4,17:8};
+  if(!(cho in doubled))return null;
+  return String.fromCharCode(0xac00+doubled[cho]*588+rest)+s.slice(1);
+}
+function lastVowelExtension(out){
+  if(!out)return '';
+  const n=out.charCodeAt(out.length-1);
+  if(n<0xac00||n>0xd7a3)return '';
+  const vowelIndex=Math.floor((n-0xac00)%588/28);
+  return KOREAN_COMBINED_VOWEL[['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'][vowelIndex]]||'';
+}
+function koreanTokens(s){
+  const h=toHira(s);const tokens=[];
+  for(let i=0;i<h.length;i++){
+    const c=h[i];
+    if(c==='っ'||c==='ん'||c==='ー'){tokens.push({type:c,unit:c,text:KOREAN_SYLLABLES[c]||''});continue;}
+    if(c==='・'||c===' '||c==='　'){continue;}
+    const pair=h.slice(i,i+2),unit=KOREAN_SYLLABLES[pair]?pair:c;
+    tokens.push({type:'kana',unit,text:KOREAN_SYLLABLES[unit]||'?'});
+    if(unit.length===2)i++;
+  }
+  return tokens;
+}
+function koreanRender(tokens,{shortVowels=false,germinate='coda',nasal='n'}={}){
+  let out='';
+  for(let i=0;i<tokens.length;i++){
+    const t=tokens[i],next=tokens[i+1];
+    if(t.type==='っ'){
+      if(germinate==='coda')out=withCoda(out,19); // final ㅅ
+      else if(germinate==='double'&&next?.type==='kana'){
+        const doubled=doubleInitial(next.text);
+        if(doubled){tokens=tokens.slice();tokens[i+1]={...next,text:doubled};}
+      }
+      continue;
+    }
+    if(t.type==='ん'){
+      const useM=nasal==='m'&&next?.type==='kana'&&/^[ㅂㅃㅍㅁ]/.test(next.text);
+      const result=withCoda(out,useM?16:4); // final ㅁ=16, ㄴ=4
+      out=result===out?out+'응':result;
+      continue;
+    }
+    if(t.type==='ー'){
+      if(!shortVowels)out+=lastVowelExtension(out);
+      continue;
+    }
+    if(t.text==='?'){out+='?';continue;}
+    const before=tokens[i-1],prevIsLongU=t.unit==='う'&&before?.type==='kana'&&/[おこそとのほもよろをごぞどぼぽょ]/.test(before.unit.slice(-1));
+    const prevIsLongI=t.unit==='い'&&before?.type==='kana'&&/[えけせてねへめれげぜでべぺ]/.test(before.unit.slice(-1));
+    // Japanese おう, きょう, せい etc. can be typed with or without the lengthened vowel.
+    if(shortVowels&&(prevIsLongU||prevIsLongI))continue;
+    out+=t.text;
+  }
+  return out;
+}
+function koreanReadings(s){
+  const h=toHira(s);
+  const tokens=koreanTokens(h);
+  const variants=new Set();
+  for(const shortVowels of [false,true]){
+    for(const germinate of ['coda','double']){
+      variants.add(koreanRender(tokens,{shortVowels,germinate}));
+    }
+  }
+  if(KOREAN_SPECIAL_VARIANTS[h])return KOREAN_SPECIAL_VARIANTS[h];
+  const custom=KOREAN_EXTRAS[h]||[];custom.forEach(x=>variants.add(x));
+  if(h==='きょう')variants.add('교');
+  return [...variants].filter(x=>x&&!x.includes('?'));
+}
+function koreanPrimary(s){
+  const h=toHira(s);
+  return KOREAN_SPECIAL_WORDS[h]||koreanReadings(h)[0]||'?';
+}
+
+(() => {
+'use strict';
+const $ = (sel) => document.querySelector(sel);
+const STORAGE_KEY = 'kana_lab_offline_v1';
+const CATEGORIES = {basic:'기본 글자', voiced:'탁음 · 반탁음', combo:'요음'};
+const WORD_NAMES = {basic:'기초·인사',school:'학교·취미',living:'생활·음식',travel:'장소·이동',culture:'문화·표현'};
+const ORIGINAL_ROWS = {
+ basic:[['あ',['あ','い','う','え','お'],['a','i','u','e','o']],['か',['か','き','く','け','こ'],['ka','ki','ku','ke','ko']],['さ',['さ','し','す','せ','そ'],['sa','shi','su','se','so']],['た',['た','ち','つ','て','と'],['ta','chi','tsu','te','to']],['な',['な','に','ぬ','ね','の'],['na','ni','nu','ne','no']],['は',['は','ひ','ふ','へ','ほ'],['ha','hi','fu','he','ho']],['ま',['ま','み','む','め','も'],['ma','mi','mu','me','mo']],['や',['や',null,'ゆ',null,'よ'],['ya',null,'yu',null,'yo']],['ら',['ら','り','る','れ','ろ'],['ra','ri','ru','re','ro']],['わ',['わ',null,null,null,'を'],['wa',null,null,null,'wo']],['ん',['ん',null,null,null,null],['n',null,null,null,null]]],
+ voiced:[['が',['が','ぎ','ぐ','げ','ご'],['ga','gi','gu','ge','go']],['ざ',['ざ','じ','ず','ぜ','ぞ'],['za','ji','zu','ze','zo']],['だ',['だ','ぢ','づ','で','ど'],['da','ji','zu','de','do']],['ば',['ば','び','ぶ','べ','ぼ'],['ba','bi','bu','be','bo']],['ぱ',['ぱ','ぴ','ぷ','ぺ','ぽ'],['pa','pi','pu','pe','po']]],
+ combo:[['き',['きゃ','きゅ','きょ',null,null],['kya','kyu','kyo',null,null]],['し',['しゃ','しゅ','しょ',null,null],['sha','shu','sho',null,null]],['ち',['ちゃ','ちゅ','ちょ',null,null],['cha','chu','cho',null,null]],['に',['にゃ','にゅ','にょ',null,null],['nya','nyu','nyo',null,null]],['ひ',['ひゃ','ひゅ','ひょ',null,null],['hya','hyu','hyo',null,null]],['み',['みゃ','みゅ','みょ',null,null],['mya','myu','myo',null,null]],['り',['りゃ','りゅ','りょ',null,null],['rya','ryu','ryo',null,null]],['ぎ',['ぎゃ','ぎゅ','ぎょ',null,null],['gya','gyu','gyo',null,null]],['じ',['じゃ','じゅ','じょ',null,null],['ja','ju','jo',null,null]],['び',['びゃ','びゅ','びょ',null,null],['bya','byu','byo',null,null]],['ぴ',['ぴゃ','ぴゅ','ぴょ',null,null],['pya','pyu','pyo',null,null]]]
+};
+const toKata = (value) => [...value].map(ch => { const n=ch.charCodeAt(0);return n>=0x3041&&n<=0x3096?String.fromCharCode(n+96):ch;}).join('');
+const KANA = []; const KANA_BY_ID = new Map(); const ROWS = {};
+for (const script of ['h','k']) {
+  ROWS[script] = {};
+  for (const [category,rows] of Object.entries(ORIGINAL_ROWS)) {
+    ROWS[script][category] = rows.map(([label,letters,readings]) => {
+      const row = {label:script==='k'?toKata(label):label, ids:[]};
+      for (let col=0;col<5;col++) {
+        const c=letters[col]; if (!c) {row.ids.push(null);continue;}
+        const char=script==='k'?toKata(c):c;
+        const item={id:`${script}:${char}`,char,romaji:readings[col],reading:koreanPrimary(char),readings:koreanReadings(char),category,script};
+        row.ids.push(item.id);KANA.push(item);KANA_BY_ID.set(item.id,item);
+      }return row;
+    });
+  }
+}
+const romanMap = new Map(KANA.filter(x=>x.script==='h').map(x=>[x.char,x.romaji]));
+// 외래어에 쓰이는 확장 가나 조합 (フェ, ティ, ウィ 등)
+for (const [char,reading] of Object.entries({'ふぁ':'fa','ふぃ':'fi','ふぇ':'fe','ふぉ':'fo','てぃ':'ti','でぃ':'di','とぅ':'tu','どぅ':'du','うぃ':'wi','うぇ':'we','うぉ':'wo','しぇ':'she','ちぇ':'che','じぇ':'je','つぁ':'tsa','つぃ':'tsi','つぇ':'tse','つぉ':'tso'})) romanMap.set(char,reading);
+const kunreiReplace = {
+ 'し':'si','ち':'ti','つ':'tu','ふ':'hu','じ':'zi','ぢ':'di','づ':'du',
+ 'しゃ':'sya','しゅ':'syu','しょ':'syo','ちゃ':'tya','ちゅ':'tyu','ちょ':'tyo',
+ 'じゃ':'zya','じゅ':'zyu','じょ':'zyo',
+};
+const SPECIAL_WORDS = {'こんにちは':'konnichiwa','こんばんは':'konbanwa'};
+function romanize(s,alternate=false) {
+  const h=[...s].map(c=>{const n=c.charCodeAt(0);return n>=0x30a1&&n<=0x30f6?String.fromCharCode(n-96):c;}).join('');
+  let out='';
+  for (let i=0;i<h.length;i++) {
+    const c=h[i];
+    if(c==='っ'){
+      const next2=h.slice(i+1,i+3),next1=h[i+1];
+      const next = (alternate && kunreiReplace[next2])||romanMap.get(next2)||(alternate && kunreiReplace[next1])||romanMap.get(next1)||'';
+      out += next.startsWith('ch')?'t':next.slice(0,1);
+      continue;
+    }
+    if(c==='ー') {const vowels=out.match(/[aeiou]/g);out+=(vowels?.[vowels.length-1]||'');continue;}
+    const pair=h.slice(i,i+2);
+    const key=romanMap.has(pair)?pair:c;
+    const base=romanMap.get(key);
+    if(base){out+=(alternate && kunreiReplace[key])||base;if(key.length===2)i++;}
+    else if(c==='・'||c===' '){continue;}
+    else {out+='?';}
+  }
+  return out;
+}
+const WORDS=[];
+const seenWords=new Set();
+for (const [category,raw] of Object.entries(WORD_DATA)) {
+ for(const line of raw.trim().split(/\r?\n/)) {
+   const [written,meaning]=line.trim().split('|');
+   if(!written||!meaning||seenWords.has(written))continue;
+   seenWords.add(written);
+   const h=/[\u3040-\u309f]/.test(written),k=/[\u30a0-\u30ff]/.test(written);
+   const id=`w:${written}`;
+   const romaji=SPECIAL_WORDS[written]||romanize(written);
+   const alternative = SPECIAL_WORDS[written] || romanize(written,true);
+   WORDS.push({id,char:written,meaning,romaji,alternative,reading:koreanPrimary(written),readings:koreanReadings(written),category,script:h&&k?'both':k?'k':'h'});
+ }
+}
+const ALL_IDS = new Set([...KANA.map(x=>x.id),...WORDS.map(x=>x.id)]);
+const KANA_DEFAULT=KANA.filter(x=>x.category==='basic').map(x=>x.id);
+const DEFAULT = ()=>({mode:'kana',script:'both',board:'both',wordFilter:'all',autoExclude:true,weakPriority:true,showRomaji:false,selected:KANA_DEFAULT.slice(),stats:{},history:[],inspect:'h:あ'});
+function cleanStat(v) {
+ if(!v || typeof v!=='object')return null;
+ const n=x=>Number.isFinite(x)&&x>=0&&x<=10000000?Math.floor(x):0;
+ return {c:n(v.c),w:n(v.w),streak:n(v.streak),force:v.force===true?true:v.force===false?false:null};
+}
+function sanitize(raw) {
+ const def=DEFAULT();if(!raw||typeof raw!=='object')return def;
+ const valid=(input,allowed,fallback)=>allowed.includes(input)?input:fallback;
+ def.mode=valid(raw.mode,['kana','word'],'kana');
+ def.script=valid(raw.script,['h','k','both'],'both');
+ def.board=valid(raw.board,['h','k','both'],'both');
+ def.wordFilter=valid(raw.wordFilter,['all','basic','school','living','travel','culture','wrong'],'all');
+ def.autoExclude=raw.autoExclude!==false;
+ def.weakPriority=raw.weakPriority!==false;
+ def.showRomaji=raw.showRomaji===true;
+ if(Array.isArray(raw.selected))def.selected=[...new Set(raw.selected.filter(x=>typeof x==='string'&&KANA_BY_ID.has(x)))];
+ if(raw.stats&&typeof raw.stats==='object'){for(const [id,value] of Object.entries(raw.stats)){if(!ALL_IDS.has(id))continue;const clean=cleanStat(value);if(clean)def.stats[id]=clean;}}
+ if(Array.isArray(raw.history))def.history=raw.history.filter(x=>x&&ALL_IDS.has(x.id)&&typeof x.correct==='boolean'&&Number.isFinite(x.date)).slice(-1000).map(x=>({id:x.id,correct:x.correct,date:x.date}));
+ def.inspect=KANA_BY_ID.has(raw.inspect)?raw.inspect:'h:あ';
+ return def;
+}
+let storageOK=true;let state;
+try{state=sanitize(JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'));}catch(e){state=DEFAULT();storageOK=false;}
+let selected=new Set(state.selected);
+let session={c:0,w:0};let questionCounter=0;let current=null;let answered=false;let undoSnapshot=null;let recent=[];let retryQueue=[];let toastTimer=null;
+const allStats = (id)=>state.stats[id]||{c:0,w:0,streak:0,force:null};
+function mastery(id){const s=allStats(id);if(s.force!==null)return s.force;const total=s.c+s.w;return total>0&&s.streak>=5&&s.c/total>=.8;}
+function status(id){const s=allStats(id),n=s.c+s.w;if(mastery(id))return 'mastered';if(n===0)return 'fresh';if(s.w>0&&(s.c/n<.7||(s.w>=2&&s.streak<2)))return 'weak';return 'learning';}
+function niceNum(n){return n.toLocaleString('ko-KR');}
+function persist(){state.selected=[...selected];try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));storageOK=true;}catch(e){storageOK=false;}}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function toast(text){const el=$('#toast');el.textContent=text;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);}
+function resetQuiz(){answered=false;undoSnapshot=null;$('#feedback').hidden=true;$('#undo-btn').hidden=true;$('#answer-input').disabled=false;$('#answer-input').value='';$('#submit-btn').innerHTML='정답 확인 <span>↵</span>';}
+function pool(){
+ if(state.mode==='kana')return KANA.filter(x=>selected.has(x.id)&&(state.script==='both'||x.script===state.script)&&(!state.autoExclude||!mastery(x.id)));
+ return WORDS.filter(x=>{
+   if(state.script!=='both'&&x.script!==state.script)return false;
+   if(state.wordFilter==='wrong'){if(allStats(x.id).w===0)return false;}
+   else if(state.wordFilter!=='all'&&x.category!==state.wordFilter)return false;
+   return !state.autoExclude||!mastery(x.id);
+ });
+}
+function weightedPick(items){
+ const weights=items.map(x=>{
+  const s=allStats(x.id),n=s.c+s.w;
+  const weak=state.weakPriority?Math.min(5,s.w*.75+(s.w>0&&s.streak===0?1.2:0)):0;
+  return (n===0?2.3:1)+(weak)+(state.weakPriority&&s.streak>=3?-.55:0);
+ });
+ const total=weights.reduce((a,b)=>a+b,0);let r=Math.random()*total;
+ for(let i=0;i<items.length;i++){r-=weights[i];if(r<=0)return items[i];}
+ return items[items.length-1];
+}
+function nextQuestion(){
+ resetQuiz();questionCounter++;
+ const available=pool();
+ if(available.length===0){current=null;renderQuiz();renderStats();return;}
+ const match=retryQueue.findIndex(q=>q.mode===state.mode&&q.due<=questionCounter&&available.some(v=>v.id===q.id));
+ if(match!==-1){const re=retryQueue.splice(match,1)[0];current=available.find(x=>x.id===re.id);}
+ else{
+   const notRecent=available.filter(x=>!recent.slice(-Math.min(3,available.length-1)).includes(x.id));
+   current=weightedPick(notRecent.length?notRecent:available);
+ }
+ recent.push(current.id);if(recent.length>8)recent.shift();renderQuiz();
+ requestAnimationFrame(()=>$('#answer-input')?.focus({preventScroll:true}));
+}
+function isCorrect(input,item){
+ const normalize=x=>String(x).normalize('NFKC').trim().replace(/[\s·.,!\-’']/g,'');
+ const got=normalize(input);
+ return got!=='' && item.readings.some(x=>normalize(x)===got);
+}
+function grade(){
+ const text=$('#answer-input').value.trim();if(!text){$('#answer-input').focus();return;}
+ if(answered){nextQuestion();return;}
+ if(!current)return;
+ const right=isCorrect(text,current);
+ const prior=allStats(current.id);
+ undoSnapshot={id:current.id,prior:state.stats[current.id]?{...state.stats[current.id]}:null,historyLen:state.history.length,session:{...session},retry:retryQueue.map(x=>({...x})),input:text};
+ const record={...prior};if(right){record.c++;record.streak++;session.c++;}else{record.w++;record.streak=0;session.w++;retryQueue.push({id:current.id,mode:state.mode,due:questionCounter+3+Math.floor(Math.random()*3)});}
+ state.stats[current.id]=record;
+ state.history.push({id:current.id,correct:right,date:Date.now()});if(state.history.length>1000)state.history.shift();
+ answered=true;$('#answer-input').disabled=true;$('#submit-btn').innerHTML='다음 문제 <span>↵</span>';$('#undo-btn').hidden=false;
+ const box=$('#feedback');box.hidden=false;box.className='feedback '+(right?'right':'wrong');
+ box.innerHTML=`<div class="feedback-top">${right?'✓ 정확해!':'✕ 아쉽다! 다시 외워보자.'}</div><div class="feedback-detail">정답: <b>${escapeHTML(current.reading)}</b>${!right?' <span>· 입력: '+escapeHTML(text)+'</span>':''}</div>${current.meaning?'<small>뜻: '+escapeHTML(current.meaning)+'</small>':''}${!right?'<small>이 항목은 3~5문제 뒤에 다시 출제돼.</small>':''}`;
+ persist();renderBoard();renderInspector();renderStats();
+ $('#submit-btn').focus({preventScroll:true});
+}
+function undo(){if(!undoSnapshot||!current||undoSnapshot.id!==current.id||!answered)return;
+ const snap=undoSnapshot;
+ if(snap.prior)state.stats[snap.id]={...snap.prior};else delete state.stats[snap.id];
+ state.history.splice(snap.historyLen);
+ session={...snap.session};retryQueue=snap.retry;
+ undoSnapshot=null;answered=false;
+ $('#feedback').hidden=true;$('#undo-btn').hidden=true;
+ $('#answer-input').disabled=false;$('#answer-input').value=snap.input;
+ $('#submit-btn').innerHTML='정답 확인 <span>↵</span>';
+ persist();renderBoard();renderInspector();renderStats();$('#answer-input').focus({preventScroll:true});toast('방금 채점을 취소했어. 다시 입력할 수 있어.');
+}
+function renderBoard(){
+ $('#selected-badge').textContent=`${selected.size}개 선택`;
+ const eligible=KANA.filter(x=>selected.has(x.id)&&(state.script==='both'||x.script===state.script)&&(!state.autoExclude||!mastery(x.id))).length;
+ $('#pool-hint').textContent=`현재 ${eligible}개 출제 가능`;
+ document.querySelectorAll('[data-board]').forEach(x=>{x.classList.toggle('active',x.dataset.board===state.board);});
+ let html='';
+ for (const script of ['h','k']){
+ if(state.board!=='both'&&state.board!==script)continue;
+ const title=script==='h'?'히라가나':'가타카나';
+ html+=`<section class="script-board" aria-label="${title} 표"><div class="script-head"><div class="script-title">${title}<small>${KANA.filter(x=>x.script===script&&selected.has(x.id)).length}개 선택됨</small></div><div class="script-actions"><button class="mini-link" data-script-action="select" data-script-id="${script}">전부 선택</button><button class="mini-link" data-script-action="clear" data-script-id="${script}">해제</button></div></div>`;
+ for (const category of ['basic','voiced','combo']){
+ const ids=KANA.filter(x=>x.script===script&&x.category===category).map(x=>x.id);
+ const all=ids.every(id=>selected.has(id));
+ html+=`<div class="category-heading"><span>${CATEGORIES[category]}</span><button data-category="${category}" data-category-script="${script}" aria-label="${CATEGORIES[category]} ${all?'해제':'선택'}">${all?'− 제외':'+ 선택'}</button></div>`;
+ for (const row of ROWS[script][category]){
+   const rowIDs=row.ids.filter(Boolean),allRow=rowIDs.every(id=>selected.has(id));
+   html+=`<div class="kana-row"><button class="row-label" title="${row.label}행 ${allRow?'선택 해제':'전체 선택'}" data-row-ids="${rowIDs.join(',')}">${row.label}</button>`;
+   for(const id of row.ids){
+    if(!id){html+='<div class="kana-spacer"></div>';continue;}
+    const item=KANA_BY_ID.get(id),s=allStats(id),stat=status(id),isSelected=selected.has(id);
+    const css='kana-tile '+stat+(isSelected?' selected':' not-picked');
+    const titleText=`${item.char} (${item.reading}) · 정답 ${s.c} / 오답 ${s.w} · 연속 정답 ${s.streak}`;
+    html+=`<button type="button" class="${css}" data-kana-id="${escapeHTML(id)}" aria-pressed="${isSelected}" title="${escapeHTML(titleText)}"><span class="selected-check">${isSelected?'✓':''}</span><span class="kana-sym" lang="ja">${item.char}</span><span class="kana-roman">${item.reading}</span>${s.c+s.w?'<span class="kana-count">'+s.c+'/'+s.w+'</span>':''}</button>`;
+   }
+   html+='</div>';
+ }
+ }
+ html+='</section>';
+ }
+ $('#kana-board').innerHTML=html;
+ $('#kana-board').classList.toggle('hide-romaji',!state.showRomaji);
+ $('#reading-toggle').textContent=state.showRomaji?'◉ 발음 숨기기':'◉ 발음 표시';
+ $('#reading-toggle').setAttribute('aria-pressed',String(state.showRomaji));
+}
+function renderInspector(){
+ const item=KANA_BY_ID.get(state.inspect)||KANA[0];const s=allStats(item.id);
+ const m=mastery(item.id),st=status(item.id);
+ const stateLabel={mastered:'숙달 완료',weak:'집중 복습 필요',learning:'학습 중',fresh:'아직 풀지 않음'}[st];
+ $('#inspector').innerHTML=`<div class="inspect-head"><div class="inspect-glyph" lang="ja">${item.char}</div><div><strong>${item.reading}</strong><p>${item.script==='h'?'히라가나':'가타카나'} · ${stateLabel}</p></div></div><div class="inspect-stats"><div class="inspect-stat"><strong>${s.c}</strong><small>정답</small></div><div class="inspect-stat"><strong>${s.w}</strong><small>오답</small></div><div class="inspect-stat"><strong>${s.streak}</strong><small>연속 정답</small></div></div><div class="inspect-actions"><button type="button" data-inspect-action="${m?'unmaster':'master'}">${m?'숙달 해제':'숙달로 표시'}</button><button type="button" data-inspect-action="reset">이 글자 기록 초기화</button></div>`;
+}
+function renderSettings(){
+ $('#tab-kana').classList.toggle('active',state.mode==='kana');$('#tab-word').classList.toggle('active',state.mode==='word');
+ $('#tab-kana').setAttribute('aria-selected',state.mode==='kana'?'true':'false');$('#tab-word').setAttribute('aria-selected',state.mode==='word'?'true':'false');
+ $('#word-filter-wrapper').hidden=state.mode!=='word';$('#word-filter').value=state.wordFilter;
+ $('#mastered-exclude').checked=state.autoExclude;$('#weak-priority').checked=state.weakPriority;
+ document.querySelectorAll('[data-script]').forEach(x=>x.classList.toggle('active',x.dataset.script===state.script));
+ $('#vocab-summary').innerHTML=`<b>${WORDS.length}개의 학습용 선별 어휘</b>가 들어 있어. EBS 수능특강 일본어Ⅰ·일본어Ⅰ 교육과정의 일상적 주제를 참고했지만, <b>기출별 등장 횟수·빈출 순위와 1:1 대조해 검증한 목록은 아니야.</b> 정답을 맞히면 뜻도 함께 확인할 수 있어.`;
+}
+function renderQuiz(){
+ $('#quiz-kind').textContent=state.mode==='kana'?'글자별 학습':'수능 대비 단어 학습';
+ $('#quiz-pool').textContent=`출제 가능 ${pool().length}개`;
+ $('#question-number').textContent='QUESTION '+String(questionCounter).padStart(3,'0');
+ if(!current){$('#question-view').hidden=true;$('#empty-view').hidden=false;
+ if(state.mode==='kana'){$('#empty-title').textContent='출제할 글자가 없어!';$('#empty-message').textContent=selected.size?'숙달한 글자는 제외됐거나 현재 문자 종류에 선택된 글자가 없어. 숙달 자동 제외를 끄거나 왼쪽에서 더 선택해 줘.':'왼쪽의 히라가나·가타카나 표에서 글자를 체크해 줘.';$('#empty-reset').textContent='기본 글자 선택';}
+ else{$('#empty-title').textContent='조건에 맞는 단어가 없어!';$('#empty-message').textContent='문자 종류 또는 단어 범위를 바꾸거나 숙달 자동 제외 설정을 꺼 봐.';$('#empty-reset').textContent='단어 설정 초기화';}
+ return;}
+ $('#question-view').hidden=false;$('#empty-view').hidden=true;
+ const glyph=$('#question-glyph');glyph.textContent=current.char;glyph.classList.toggle('word',state.mode==='word');glyph.classList.toggle('long',state.mode==='word'&&[...current.char].length>=8);
+ $('#type-chip').textContent=current.script==='both'?'혼합 문자':current.script==='h'?'히라가나':'가타카나';
+ $('#hint-chip').textContent=state.mode==='word'?`${WORD_NAMES[current.category]}`:'한글 입력';
+ $('#answer-input').placeholder=state.mode==='word'?'발음을 한글로 입력 (예: 사쿠라)':'예: 시, 쓰, 쿄우';
+}
+function renderStats(){
+ const ks=KANA.filter(x=>selected.has(x.id));const mastered=ks.filter(x=>mastery(x.id)).length;
+ $('#progress-count').innerHTML=`${mastered} <span>/ ${ks.length}</span>`;
+ $('#progress-bar').style.width=ks.length?`${(mastered/ks.length)*100}%`:'0%';
+ $('#session-correct').textContent=session.c;$('#session-wrong').textContent=session.w;
+ $('#session-rate').textContent=session.c+session.w?`${Math.round(session.c/(session.c+session.w)*100)}%`:'—';
+ let attempts=0,c=0,weak=0;
+ for(const [id,v] of Object.entries(state.stats)){c+=v.c;attempts+=v.c+v.w;if(status(id)==='weak')weak++;}
+ $('#all-attempts').innerHTML=`${niceNum(attempts)}<span>문제</span>`;
+ $('#all-accuracy').textContent=attempts?`${Math.round(c/attempts*100)}%`:'—';
+ $('#weak-total').innerHTML=`${weak}<span>개</span>`;
+}
+function refresh({question=false}={}){renderSettings();renderBoard();renderInspector();renderStats();if(question)nextQuestion();else renderQuiz();persist();}
+function mutateSelection(op,ids){
+ const filtered=ids.filter(id=>KANA_BY_ID.has(id));
+ if(op==='select')filtered.forEach(x=>selected.add(x));
+ else if(op==='clear')filtered.forEach(x=>selected.delete(x));
+ else if(op==='toggle'){const all=filtered.every(x=>selected.has(x));filtered.forEach(x=>all?selected.delete(x):selected.add(x));}
+ refresh({question:state.mode==='kana'});
+}
+function scriptBoardIDs(){return KANA.filter(x=>state.board==='both'||x.script===state.board).map(x=>x.id);}
+$('#kana-board').addEventListener('click',(e)=>{
+ const tile=e.target.closest('[data-kana-id]');if(tile){const id=tile.dataset.kanaId;state.inspect=id;mutateSelection('toggle',[id]);return;}
+ const row=e.target.closest('[data-row-ids]');if(row){mutateSelection('toggle',row.dataset.rowIds.split(','));return;}
+ const cat=e.target.closest('[data-category]');if(cat){mutateSelection('toggle',KANA.filter(x=>x.script===cat.dataset.categoryScript&&x.category===cat.dataset.category).map(x=>x.id));return;}
+ const action=e.target.closest('[data-script-action]');if(action){mutateSelection(action.dataset.scriptAction,KANA.filter(x=>x.script===action.dataset.scriptId).map(x=>x.id));}
+});
+$('#inspector').addEventListener('click',e=>{
+ const btn=e.target.closest('[data-inspect-action]');if(!btn)return;
+ const id=state.inspect,action=btn.dataset.inspectAction;
+ if(action==='reset'){if(!confirm('이 글자의 정답·오답 기록만 초기화할까?'))return;delete state.stats[id];state.history=state.history.filter(x=>x.id!==id);}
+ else {const s={...allStats(id)};s.force=action==='master';state.stats[id]=s;}
+ refresh({question:state.mode==='kana'});
+});
+$('#reading-toggle').addEventListener('click',()=>{state.showRomaji=!state.showRomaji;renderBoard();persist();});
+$('#board-script').addEventListener('click',e=>{const b=e.target.closest('[data-board]');if(!b)return;state.board=b.dataset.board;renderBoard();persist();});
+$('#study-script').addEventListener('click',e=>{const b=e.target.closest('[data-script]');if(!b)return;state.script=b.dataset.script;refresh({question:true});});
+$('#tab-kana').addEventListener('click',()=>{if(state.mode==='kana')return;state.mode='kana';refresh({question:true});});
+$('#tab-word').addEventListener('click',()=>{if(state.mode==='word')return;state.mode='word';refresh({question:true});});
+$('#word-filter').addEventListener('change',e=>{state.wordFilter=e.target.value;refresh({question:true});});
+$('#mastered-exclude').addEventListener('change',e=>{state.autoExclude=e.target.checked;refresh({question:true});});
+$('#weak-priority').addEventListener('change',e=>{state.weakPriority=e.target.checked;refresh({question:true});});
+$('#quick-basic').addEventListener('click',()=>{const ids=scriptBoardIDs();ids.forEach(id=>{if(KANA_BY_ID.get(id).category==='basic')selected.add(id);else selected.delete(id);});refresh({question:state.mode==='kana'});toast('표시된 문자표의 기본 글자를 선택했어.');});
+$('#quick-all').addEventListener('click',()=>mutateSelection('select',scriptBoardIDs()));
+$('#quick-clear').addEventListener('click',()=>mutateSelection('clear',scriptBoardIDs()));
+$('#quick-weak').addEventListener('click',()=>{const ids=scriptBoardIDs(),weak=ids.filter(id=>allStats(id).w>0&&!mastery(id));if(weak.length===0){toast('아직 복습할 오답 글자가 없어.');return;}ids.forEach(id=>selected.delete(id));weak.forEach(id=>selected.add(id));refresh({question:state.mode==='kana'});toast(`${weak.length}개의 오답 글자만 선택했어.`);});
+let answerComposing=false;
+$('#answer-input').addEventListener('compositionstart',()=>{answerComposing=true;});
+$('#answer-input').addEventListener('compositionend',()=>{answerComposing=false;});
+$('#answer-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.isComposing||e.keyCode===229||answerComposing)){e.preventDefault();e.stopPropagation();}});
+$('#answer-form').addEventListener('submit',e=>{e.preventDefault();if(answerComposing)return;if(answered)nextQuestion();else grade();});
+$('#skip-btn').addEventListener('click',()=>nextQuestion());
+$('#undo-btn').addEventListener('click',undo);
+$('#empty-reset').addEventListener('click',()=>{if(state.mode==='kana'){const ids=KANA.filter(x=>x.category==='basic'&&(state.script==='both'||x.script===state.script)).map(x=>x.id);ids.forEach(id=>selected.add(id));state.autoExclude=false;}else{state.script='both';state.wordFilter='all';state.autoExclude=false;}refresh({question:true});});
+$('#export-btn').addEventListener('click',()=>{
+ persist();const payload={app:'KANA LAB',version:1,exportedAt:new Date().toISOString(),state};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download=`kana-lab-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ toast('학습 기록을 JSON으로 백업했어.');
+});
+$('#import-btn').addEventListener('click',()=>$('#import-file').click());
+$('#import-file').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{if(file.size>5_000_000)throw Error('백업 파일이 너무 커.');const data=JSON.parse(await file.text());if(data.app!=='KANA LAB'||data.version!==1||!data.state)throw Error('KANA LAB 백업 파일이 아니야.');
+ if(!confirm('현재 기록이 백업 파일의 기록으로 교체돼. 계속할까?'))return;
+ state=sanitize(data.state);selected=new Set(state.selected);session={c:0,w:0};retryQueue=[];recent=[];questionCounter=0;refresh({question:true});toast('기록을 복원했어.');
+ }catch(err){toast('복원 실패: '+err.message);}finally{e.target.value='';}
+});
+$('#reset-btn').addEventListener('click',()=>{if(!confirm('모든 글자·단어 정답/오답 기록과 선택 범위를 지울까? 복구하려면 백업 파일이 필요해.'))return;
+ state=DEFAULT();selected=new Set(state.selected);session={c:0,w:0};retryQueue=[];recent=[];questionCounter=0;refresh({question:true});toast('학습 기록을 초기화했어.');
+});
+// file:// 에서 localStorage를 제한하는 브라우저를 위한 안내: JSON 백업은 항상 가능.
+refresh();nextQuestion();
+if(!storageOK)toast('이 브라우저에서 자동 저장이 제한돼. 중요한 기록은 상단의 백업을 사용해 줘.');
+window.KanaLabDebug = Object.freeze({kanaCount:KANA.length,wordCount:WORDS.length,invalidHangul:WORDS.filter(w=>w.reading.includes('?')).map(w=>w.char),koreanFor:(s)=>koreanReadings(s),koreanPrimary});
+})();
+
+</script>
+</body>
+</html>
